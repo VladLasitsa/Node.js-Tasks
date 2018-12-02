@@ -1,3 +1,3 @@
 ## My Node JS Homework
 
-Task 1 - branch task-1
+**Nomework 1: NODE.JS MODULES. NPM** - see in branch *task-1*
