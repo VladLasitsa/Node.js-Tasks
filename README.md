@@ -1,3 +1,3 @@
-## My Node JS Homework - Task 1
+## My Node JS Homework
 
-https://epa.ms/nodejs18-hw1
+**Nomework 1: NODE.JS MODULES. NPM** (https://epa.ms/nodejs18-hw1) - see in branch *task-1*
