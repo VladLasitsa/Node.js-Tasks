@@ -38,7 +38,7 @@ class DirWatcher {
             if (oErr) {
                 console.log(oErr);
             } else {
-                if (!oldData[sFileName] || oldData[sFileName] !== oData.mtimeMs) {
+                if (oData.isFile() && (!oldData[sFileName] || oldData[sFileName] !== oData.mtimeMs)) {
                     console.log(`File ${sFileName} was changed!`);
                     this.emitter.emit("dirwatcher:changed", sFilePath);
                     oldData[sFileName] = oData.mtimeMs;
