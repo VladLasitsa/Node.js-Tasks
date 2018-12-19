@@ -9,19 +9,26 @@ class DirWatcher {
 
     watch(sPath, iDelay) {
         let oldData = {};
-        setInterval(() => {
+        setTimeout(function checkFiles() {
             fs.readdir(sPath, (oErr, aFiles) => {
                 if (!oErr) {
+                    let aDeletedFiles = Object.keys(oldData).filter(sFileName => {
+                        if (aFiles.indexOf(sFileName) === -1) {
+                            delete oldData[sFileName];
+                            return true;
+                        }
+                    });
+                    aDeletedFiles.forEach(sDelitedFileName => console.log(`File ${sDelitedFileName} was removed!`));
                     aFiles.forEach(sFileName => {
                         let sFilePath = sPath + "/" + sFileName;
                         fs.stat(sFilePath, (oErr, oData) => {
                             if (oErr) {
                                 console.log(oErr);
                             } else {
-                                if (!oldData[sFilePath] || oldData[sFilePath] !== oData.mtimeMs) {
+                                if (!oldData[sFileName] || oldData[sFileName] !== oData.mtimeMs) {
                                     console.log(`File ${sFileName} was changed!`);
                                     this.emitter.emit("dirwatcher:changed", sFilePath);
-                                    oldData[sFilePath] = oData.mtimeMs;
+                                    oldData[sFileName] = oData.mtimeMs;
                                 }
                             }
                         });
@@ -30,7 +37,8 @@ class DirWatcher {
                     console.log(oErr);
                 }
             });
-        }, iDelay);
+            setTimeout(checkFiles.bind(this), iDelay);
+        }.bind(this), iDelay);
     }
 }
 
