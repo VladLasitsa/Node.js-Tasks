@@ -1,10 +1,10 @@
 "use strict";
 
-const commander = require('commander');
-const through = require('through2');
-const fs = require('fs');
-const csv2json = require('csv2json');
-const path = require('path');
+const commander = require("commander");
+const through = require("through2");
+const fs = require("fs");
+const csv2json = require("csv2json");
+const path = require("path");
 
 function defineTypeOfAction() {
     switch (commander.action) {
@@ -55,53 +55,57 @@ function outputFile() {
     }
     const stream = through(write);
     fs.createReadStream(commander.file)
-        .on('error', error => console.error(error))
+        .on("error", error => console.error(error))
         .pipe(stream)
         .pipe(process.stdout);
 }
 
 function convertFromFile() {
     _checkFileName();
-    _checkFileExtension('.cvs');
+    _checkFileExtension(".cvs");
      fs.createReadStream(commander.file)
-        .on('error', error => console.error(error))
+        .on("error", error => console.error(error))
         .pipe(csv2json({
-            separator: ';'
+            separator: ";"
         }))
         .pipe(process.stdout);
 }
 
 function convertToFile() {
     _checkFileName();
-    _checkFileExtension('.cvs');
+    _checkFileExtension(".cvs");
     let filePath = commander.file;
-    const writeStream = fs.createWriteStream(filePath.replace(/\.[^\.]+$/, '.json'));
+    const writeStream = fs.createWriteStream(filePath.replace(/\.[^\.]+$/, ".json"));
     fs.createReadStream(filePath)
-        .on('error', error => console.error(error))
+        .on("error", error => console.error(error))
         .pipe(csv2json({
-            separator: ';'
+            separator: ";"
         }))
         .pipe(writeStream)
-        .on('error', error => console.error(error));
+        .on("error", error => console.error(error));
 }
 
 function cssBundler() {
     _checkPath();
     const dirPath = commander.path;
     const writeStream = fs.createWriteStream(dirPath + "/bundle.css");
-    writeStream.on('error', error => console.error(error));
+    writeStream.on("error", error => console.error(error));
     fs.readdir(dirPath, (error, files) => {
         if (error) {
             console.error(error);
         }
 
         files.forEach(file => {
-            if (path.extname(file) === '.css' && file !== "bundle.css") {
-                 fs.createReadStream(dirPath + '/' + file)
-                    .on('error', error => console.error(error))
+            if (path.extname(file) === ".css" && file !== "bundle.css") {
+                 fs.createReadStream(dirPath + "/" + file)
+                    .on("error", error => console.error(error))
                     .pipe(writeStream);
             }
         });
+
+        fs.createReadStream("./utils/nodejs-homework3.css")
+            .on("error", error => console.error(error))
+            .pipe(writeStream);
     });
 }
 
@@ -128,14 +132,14 @@ function _checkFileExtension(extension) {
 }
 
 commander
-  .version('0.1.0')
-  .option('-a, --action <value>', 'Type of action')
-  .option('-f, --file [value]', 'Name of file')
-  .option('-p, --path [dirPath]', 'Path of directory');
+  .version("0.1.0")
+  .option("-a, --action <value>", "Type of action")
+  .option("-f, --file [value]", "Name of file")
+  .option("-p, --path [dirPath]", "Path of directory");
 
-commander.on('--help', function(){
-    console.log('')
-    console.log('Actions:');
+commander.on("--help", function(){
+    console.log("")
+    console.log("Actions:");
     console.log(`
         * reverse
         * transform
