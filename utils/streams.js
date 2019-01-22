@@ -62,7 +62,7 @@ function outputFile() {
 
 function convertFromFile() {
     _checkFileName();
-    _checkFileExtension(".cvs");
+    _checkFileExtension(".csv");
      fs.createReadStream(commander.file)
         .on("error", error => console.error(error))
         .pipe(csv2json({
@@ -73,7 +73,7 @@ function convertFromFile() {
 
 function convertToFile() {
     _checkFileName();
-    _checkFileExtension(".cvs");
+    _checkFileExtension(".csv");
     let filePath = commander.file;
     const writeStream = fs.createWriteStream(filePath.replace(/\.[^\.]+$/, ".json"));
     fs.createReadStream(filePath)
@@ -126,7 +126,7 @@ function _checkPath() {
 
 function _checkFileExtension(extension) {
     if (path.extname(commander.file) !== extension) {
-        console.error("The File has a wrong extension. The file should be cvs.");
+        console.error("The File has a wrong extension. The file should be csv.");
         process.exit();
     }
 }
