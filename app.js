@@ -1,8 +1,13 @@
 "use strict";
+import express from 'express';
+import routes from './routes/routes';
+import {cookieParser} from './middlewares/cookie-parser';
+import {queryParser} from './middlewares/query-parser';
 
-import {User, Product} from './models';
-import * as config from './config/config.json';
+const app = express();
 
-console.log(config.name);
-let user = new User();
-let product = new Product();
+app.use(queryParser);
+app.use(cookieParser);
+app.use('/', routes);
+
+export default app;
