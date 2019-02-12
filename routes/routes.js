@@ -23,7 +23,7 @@ router.get('/api/products/:id/reviews', function(req, res) {
 });
 
 router.post('/api/products', function(req, res) {
-    res.send(product.create(req.body));
+    res.send(product.createProduct(req.body));
 });
 
 router.get('/api/users', function(req, res) {
