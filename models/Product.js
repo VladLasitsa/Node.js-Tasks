@@ -1,33 +1,13 @@
 "use strict";
-import uniqid from 'uniqid';
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+    const Product = sequelize.define('Product', {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true
+        },
+        name: DataTypes.STRING
+    }, {});
 
-class Product {
-    constructor() {
-        this.products = [
-            {
-                id: "product-1",
-                name: "product for Vlad"
-            }
-        ];
-        console.log("Product module");
-    }
-
-    createProduct(product) {
-        const newProduct = {
-            id: uniqid(),
-            name: product.name
-        };
-        this.products.push(newProduct);
-        return newProduct;
-    }
-
-    getProductById(id) {
-        return this.products.find(product => product.id === id);
-    }
-
-    getList() {
-        return this.products;
-    }
-}
-
-export default Product;
+    return Product;
+};

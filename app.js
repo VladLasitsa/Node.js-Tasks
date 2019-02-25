@@ -7,6 +7,7 @@ import {cookieParser} from './middlewares/cookie-parser';
 import {queryParser} from './middlewares/query-parser';
 import {jwtTokenVerify} from './middlewares/jwtToken-verify';
 import passport from './utils/authenticationStrategiesUtil';
+import {sequelize} from './database/connect';
 
 const app = express();
 
@@ -18,5 +19,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(jwtTokenVerify);
 app.use('/', routes);
+
+sequelize.sync().then(() => {
+    app.use('/', routes);
+});
 
 export default app;

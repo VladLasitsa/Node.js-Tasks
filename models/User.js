@@ -1,23 +1,16 @@
-"use strict";
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true
+      },
+      login: DataTypes.STRING,
+      password: DataTypes.STRING,
+      firstName: DataTypes.STRING,
+      lastName: DataTypes.STRING,
+      email: DataTypes.STRING
+    }, {});
 
-class User {
-    constructor() {
-        this.users = [{
-            id: "test-person-1",
-            name: "Vlad Lasitsa",
-            login: "vlad1",
-            password: "1234"
-        }]
-        console.log("User module");
-    }
-
-    findUserByLoginAndPassword(userData) {
-        return this.users.find(user => user.login === userData.login && user.password === userData.password);
-    }
-
-    getList() {
-        return this.users;
-    }
-}
-
-export default User;
+    return User;
+};

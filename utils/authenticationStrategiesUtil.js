@@ -1,23 +1,23 @@
 import passport from 'passport';
+import Sequelize from 'sequelize';
 import LocalStrategy from 'passport-local';
 import FacebookStrategy from 'passport-facebook';
 import TwitterStrategy from 'passport-twitter';
 import GoogleStrategy from 'passport-google-oauth';
 import {User} from '../models';
 import {port} from '../config/config.json';
+import {sequelize} from '../database/connect';
 
-const user = new User();
+const user = User(sequelize, Sequelize);
 
 passport.use(new LocalStrategy.Strategy((username, password, done) => {
-    const foundUser = user.findUserByLoginAndPassword({
-        login: username,
-        password: password
+    user.findOrCreate({where: {login: username, password: password, id: uuid()}}).then((foundUser, created) => {
+        if (foundUser) {
+            done(null, foundUser);
+        } else {
+            done(null, false, {message: "User with entered login and password doesn't exists"});
+        }
     });
-    if (foundUser) {
-        done(null, foundUser);
-    } else {
-        done(null, false, {message: "User with entered login and password doesn't exists"});
-    }
 }));
 
 passport.serializeUser((user, done) => {

@@ -27,8 +27,13 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "pg": "^7.8.1",
+    "pg-hstore": "^2.3.2",
     "query-string": "^6.2.0",
+    "sequelize": "^4.42.0",
+    "sequelize-cli": "^5.4.0",
     "through2": "^3.0.0",
-    "uniqid": "^5.0.3"
+    "uniqid": "^5.0.3",
+    "uuid": "^3.3.2"
   }
 }
