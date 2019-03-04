@@ -1,4 +1,11 @@
 {
     "name": "Node.js Homework Application",
-    "port": 80
+    "port": 8083,
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "nodejs",
+        "host": "127.0.0.1",
+        "dialect": "sqlite"
+      }
 }
