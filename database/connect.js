@@ -1,5 +1,5 @@
 'use strict';
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const db = mongoose.createConnection('mongodb://localhost/vladDB');
 

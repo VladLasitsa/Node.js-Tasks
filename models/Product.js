@@ -21,7 +21,7 @@ const data = [
 ];
 
 Product.collection.insertMany(data, (err, r) => {
-    console.log(err)
+    err && console.log(err);
 });
 
 module.exports = Product;

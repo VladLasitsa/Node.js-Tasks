@@ -46,29 +46,33 @@ router.post('/auth', (req, res) => {
 
 router.get('/api/city', (req, res) => {
     City.count().exec((err, count) => {
-        const random = Math.floor(Math.random() * count)
-        City.findOne().skip(random).exec((err, result) => {
-            res.send(result);
-        });
+        if (err) {
+            res.send(err);
+        } else {
+            const random = Math.floor(Math.random() * count)
+            City.findOne().skip(random).exec((err, result) => {
+                res.send(err ? err : result);
+            });
+        }
     });
 });
 
 router.get('/api/cities', (req, res) => {
     City.find((err, result) => {
-        res.send(result);
+        res.send(err ? err : result);
     });
 });
 
 router.post('/api/cities', (req, res) => {
     const newCity = new Product(req.body);
     newCity.save((err, result => {
-        res.send(result);
+        res.send(err ? err : result);
     }));
 });
 
 router.get('/api/products', (req, res) => {
     Product.find((err, result) => {
-        res.send(result);
+        res.send(err ? err : result);
     });
 });
 
@@ -89,7 +93,7 @@ router.post('/api/products', (req, res) => {
 });
 
 router.put('/api/cities/:id', (req, res) => {
-    City.findByIdAndUpdate(req.params.id, req.body, {upsert: true}, (err, result) => {
+    City.findByIdAndUpdate(req.params.id, req.body, {new: true, upsert: true}, (err, result) => {
         res.send(err ? err : result);
     });
 });
@@ -114,7 +118,7 @@ router.delete('/api/cities/:id', (req, res) => {
 
 router.get('/api/users', function(req, res) {
     User.find(((err, result) => {
-        res.send(result);
+        res.send(err ? err : result);
     }));
 });
 

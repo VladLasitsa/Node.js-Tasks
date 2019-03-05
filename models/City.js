@@ -22,7 +22,7 @@ CitySchema.pre('save', function(next) {
 });
 
 CitySchema.pre('findOneAndUpdate', function(next) {
-    if (!this.lastModifiedDate) this.lastModifiedDate = new Date;
+    this._update.lastModifiedDate = new Date;
     next();
 });
 

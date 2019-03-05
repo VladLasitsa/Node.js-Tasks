@@ -29,9 +29,7 @@
     "passport-twitter": "^1.0.4",
     "query-string": "^6.2.0",
     "through2": "^3.0.0",
-    "uniqid": "^5.0.3"
-  },
-  "dependencies": {
+    "uniqid": "^5.0.3",
     "mongodb": "^3.1.13",
     "mongoose": "^5.4.17"
   }

@@ -38,7 +38,7 @@ const data = [
     {'name': 'Maryia Hil', 'login': 'agent of shield', 'password': 'media2'}
 ];
 User.collection.insertMany(data, (err, r) => {
-    console.log(err)
+    err && console.log(err)
 });
 
 module.exports = User;
