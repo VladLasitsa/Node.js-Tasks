@@ -64,10 +64,10 @@ router.get('/api/cities', (req, res) => {
 });
 
 router.post('/api/cities', (req, res) => {
-    const newCity = new Product(req.body);
-    newCity.save((err, result => {
+    const newCity = new City(req.body);
+    newCity.save((err, result) => {
         res.send(err ? err : result);
-    }));
+    });
 });
 
 router.get('/api/products', (req, res) => {
