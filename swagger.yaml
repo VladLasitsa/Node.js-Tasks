@@ -1,0 +1,321 @@
+swagger: '2.0'
+info:
+  description: My Node.js API
+  version: 1.0.0
+  title: Priducts & cities & users
+  
+tags:
+- name: products
+  description: Products methods
+- name: users
+  description: Users methods
+- name: cities
+  description: Cities methods
+
+paths:
+  /products:
+    get:
+      tags: 
+        - products
+      summary: Return all products
+      produces:
+        - application/json
+      responses:
+        200:
+          description: All products have been returned
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        500:
+          $ref: '#/responses/DBError'
+    post:
+      tags: 
+        - products
+      summary: Add the product
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: product
+          description: Product item to add
+          schema:
+            $ref: '#/definitions/BodyProduct'
+      responses:
+        200:
+          description: Product item has been added
+          schema:
+            $ref: '#/definitions/Product'
+        500:
+          $ref: '#/responses/DBError'
+  /products/{id}:
+    get:
+      tags: 
+        - products
+      summary: Return the product by id
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Product's identifier
+          required: true
+          type: string
+      responses:
+        200:
+          description: The found item has been returned
+          schema:
+            $ref: '#/definitions/Product'
+        404:
+          description: Product by id is not found
+        500:
+          $ref: '#/responses/DBError'
+    delete:
+      tags: 
+        - products
+      summary: Delete the product by id
+      produces:
+        - application/json
+      parameters:
+      - name: id
+        in: path
+        description: The poduct has been deleted
+        required: true
+        type: string
+      responses:
+        200:
+          description: Return OK
+          schema:
+            type: string
+        404:
+          description: Item wasn't found
+        500:
+          $ref: '#/responses/DBError'
+  /users:
+    get:
+      tags: 
+        - users
+      summary: Return all users
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Users have been returned
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        500:
+          $ref: '#/responses/DBError'
+  /users/{id}:
+    delete:
+      tags:
+        - users
+      summary: Remove user by id
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: User by id has been deleted
+          required: true
+          type: string
+      responses:
+        200:
+          description: Return OK
+          schema:
+            type: string
+        404:
+          description: Item wasn't found
+        500:
+          $ref: '#/responses/DBError'
+  /cities:
+    get:
+      tags: 
+        - cities
+      summary: Return all cities
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Cities have been returned
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/City'
+        500:
+          $ref: '#/responses/DBError'
+    post:
+      tags:
+        - cities
+      summary: Add a city to the system
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: city
+          description: City item to add
+          required: false
+          schema:
+            $ref: "#/definitions/City"
+      responses:
+        200:
+          description: Created city have been returned
+          schema:
+            $ref: "#/definitions/City"
+        400:
+          description: Invalid input
+        500:
+          $ref: '#/responses/DBError'
+  /city:
+    get:
+      tags: 
+        - cities
+      summary: Return random city
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Randon city has been returned
+          schema:
+            $ref: '#/definitions/City'
+        500:
+          $ref: '#/responses/DBError'
+  /cities/{id}:
+    put:
+      tags:
+        - cities
+      summary: Modify a city or create new one
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Id of the city
+          required: true
+          type: string
+        - in: body
+          name: city
+          description: City item to add
+          required: false
+          schema:
+              $ref: "#/definitions/City"
+      responses:
+        201:
+          description: Item has been modified or created
+        400:
+          description: Invalid input
+    delete:
+      tags:
+        - cities
+      summary: Remove city by id
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Id of the city
+          required: true
+          type: string
+      responses:
+        200:
+          description: Return OK
+          schema:
+            type: string
+        404:
+          description: Item wasn't found
+
+responses:
+  DBError:
+    description: database error
+    schema:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Client is not connected to the database.
+      
+definitions:
+  Product:
+    type: object
+    properties:
+      _id:
+        type: string
+        format: uuid
+        example: 5b4de63ca37ef415b7d0206f
+      name:
+        type: string
+        example: Potato
+      lastModifiedDate:
+        type: string
+        format: date
+        example: 2019-03-24T09:12:33.001Z
+  BodyProduct:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: Potato
+
+  User:
+    type: object
+    properties:
+      _id:
+        type: string
+        format: uuid
+        example: 5b4de63ca37ef415b7d0206f
+      firstName:
+        type: string
+        example: Vlad
+      lastName:
+        type: string
+        example: Lasitsa
+      email:
+        type: string
+        example: Ulad.las@gmail.com
+      password:
+        type: string
+        example: 12345678v
+      lastModifiedDate:
+        type: string
+        format: date
+        example: 2019-03-24T09:12:33.001Z
+
+  City:
+    type: object
+    properties:
+      location:
+        $ref: '#/definitions/Location'
+      _id:
+        type: string
+        format: uuid
+        example: 5b4de63ca37ef415b7d0206f
+      name:
+        type: string
+        example: Minsk
+      country:
+        type: string
+        example: Belarus
+      capital:
+        type: boolean
+        example: true
+  
+  Location:
+    type: object
+    required:
+      - name
+      - price
+    properties:
+      lat:
+        type: number
+        example: 76.034
+      long:
+        type: number
+        example: 20.34
+
+host: localhost:8083
+basePath: /api
+schemes:
+  - http
