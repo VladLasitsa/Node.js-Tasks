@@ -6,18 +6,14 @@ import GoogleStrategy from 'passport-google-oauth';
 import {User} from '../models';
 import {port} from '../config/config.json';
 
-const user = new User();
-
 passport.use(new LocalStrategy.Strategy((username, password, done) => {
-    const foundUser = user.findUserByLoginAndPassword({
-        login: username,
-        password: password
+    User.findOne({login: username, password: password}, (err, foundUser) => {
+        if (foundUser) {
+            done(null, foundUser);
+        } else {
+            done(null, false, {message: "User with entered login and password doesn't exists"});
+        }
     });
-    if (foundUser) {
-        done(null, foundUser);
-    } else {
-        done(null, false, {message: "User with entered login and password doesn't exists"});
-    }
 }));
 
 passport.serializeUser((user, done) => {

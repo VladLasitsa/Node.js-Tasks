@@ -1,12 +1,8 @@
 "use strict";
 import express from 'express';
 import jwt from "jsonwebtoken";
-import {User, Product, Review} from '../models';
+import {User, Product, City} from '../models';
 import passport from '../utils/authenticationStrategiesUtil';
-
-const product = new Product();
-const review = new Review();
-const user = new User();
 
 const router = express.Router();
 
@@ -20,53 +16,110 @@ function errorResponse(data) {
 
 router.post('/auth', (req, res) => {
     res.contentType('application/json');
-    const foundUser = user.findUserByLoginAndPassword(req.body);
-    let response;
-    if (foundUser) {
-        res.status(200);
-        const token = jwt.sign({
-            username: foundUser.login
-        }, 'shhhhh', { expiresIn: '15m' })
-        response = {
-            code: "200",
-            message: "OK",
-            data: {
-                user: {
-                    username: foundUser.name,
-                    email: foundUser.email
-                }
-            },
-            token
+    User.findOne({login: req.body.login, password: req.body.password}, (err, foundUser) => {
+        let response;
+        if (foundUser) {
+            res.status(200);
+            const token = jwt.sign({
+                username: foundUser.login
+            }, 'shhhhh', { expiresIn: '15m' })
+            response = {
+                code: "200",
+                message: "OK",
+                data: {
+                    user: {
+                        username: foundUser.name,
+                        email: foundUser.email
+                    }
+                },
+                token
+            }
+        } else {
+            res.status(404);
+            response = errorResponse({
+                errorMessag: "User with entered login and password doesn't exists"
+            });
         }
-    } else {
-        res.status(404);
-        response = errorResponse({
-            errorMessag: "User with entered login and password doesn't exists"
-        });
-    }
-    res.send(response);
+        res.send(response);
+    });
+});
+
+router.get('/api/city', (req, res) => {
+    City.count().exec((err, count) => {
+        if (err) {
+            res.send(err);
+        } else {
+            const random = Math.floor(Math.random() * count)
+            City.findOne().skip(random).exec((err, result) => {
+                res.send(err ? err : result);
+            });
+        }
+    });
+});
+
+router.get('/api/cities', (req, res) => {
+    City.find((err, result) => {
+        res.send(err ? err : result);
+    });
+});
+
+router.post('/api/cities', (req, res) => {
+    const newCity = new City(req.body);
+    newCity.save((err, result) => {
+        res.send(err ? err : result);
+    });
 });
 
 router.get('/api/products', (req, res) => {
-  res.send(product.getList());
+    Product.find((err, result) => {
+        res.send(err ? err : result);
+    });
 });
 
 router.get('/api/products/:id', (req, res) => {
-    const neededProduct = product.getProductById(req.params.id);
-    res.send(neededProduct ? neededProduct : `Product by id: ${req.params.id} is not found`);
-});
-
-router.get('/api/products/:id/reviews', (req, res) => {
-    const reviewsForProduct = review.getReviews(req.params.id);
-    res.send(reviewsForProduct ? reviewsForProduct : `Reviews for product with id: ${req.params.id} is not found`);
+    Product.findById(req.params.id, (err, neededProduct) => {
+        res.send(neededProduct ? neededProduct : `Product by id: ${req.params.id} is not found`);
+    });
 });
 
 router.post('/api/products', (req, res) => {
-    res.send(product.createProduct(req.body));
+    const newProduct = new Product({
+        name: req.body.name
+    });
+    newProduct.save((err, result) => {
+        console.log(err, result);
+        res.send(err ? err : result);
+    });
+});
+
+router.put('/api/cities/:id', (req, res) => {
+    City.findByIdAndUpdate(req.params.id, req.body, {new: true, upsert: true}, (err, result) => {
+        res.send(err ? err : result);
+    });
+});
+
+router.delete('/api/products/:id', (req, res) => {
+    Product.deleteOne({ _id: req.params.id }, function (err) {
+        res.send(err ? err : "OK");
+    });
+});
+
+router.delete('/api/users/:id', (req, res) => {
+    User.deleteOne({ _id: req.params.id }, function (err) {
+        res.send(err ? err : "OK");
+    });
+});
+
+router.delete('/api/cities/:id', (req, res) => {
+    City.deleteOne({ _id: req.params.id }, function (err) {
+        res.send(err ? err : "OK");
+    });
 });
 
 router.get('/api/users', function(req, res) {
-    res.send(user.getList());
+    User.find(((err, result) => {
+        res.send(err ? err : result);
+    }));
 });
 
 router.post('/login', passport.authenticate("local", {

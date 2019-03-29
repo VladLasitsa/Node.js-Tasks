@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(expressSession({secret: 'SECRET', resave: true, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(jwtTokenVerify);
+//app.use(jwtTokenVerify);
 app.use('/', routes);
 
 export default app;

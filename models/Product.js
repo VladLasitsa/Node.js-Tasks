@@ -1,33 +1,27 @@
-"use strict";
-import uniqid from 'uniqid';
+'use strict';
+import mongoose from 'mongoose';
+import db from '../database/connect';
 
-class Product {
-    constructor() {
-        this.products = [
-            {
-                id: "product-1",
-                name: "product for Vlad"
-            }
-        ];
-        console.log("Product module");
-    }
+const ProductSchema = new mongoose.Schema({
+    name: String,
+    lastModifiedDate: Date
+});
 
-    createProduct(product) {
-        const newProduct = {
-            id: uniqid(),
-            name: product.name
-        };
-        this.products.push(newProduct);
-        return newProduct;
-    }
+ProductSchema.pre('save', function(next) {
+    if (!this.lastModifiedDate) this.lastModifiedDate = new Date;
+    next();
+});
 
-    getProductById(id) {
-        return this.products.find(product => product.id === id);
-    }
+const Product = db.model("Product", ProductSchema);
 
-    getList() {
-        return this.products;
-    }
-}
+const data = [
+    {'name': 'media'},
+    {'name': 'media2'},
+    {'name': 'media3'}
+];
 
-export default Product;
+Product.collection.insertMany(data, (err, r) => {
+    err && console.log(err);
+});
+
+module.exports = Product;
